@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .first {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #i {
+            background-color: red;
+            padding: 10px 15px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 500;
+            border-radius: 20px;
+            filter: drop-shadow(0 0 5px black);
+        }
+
+        #i::placeholder {
+            color: black;
+            font-weight: 500;
+        }
+
+        .input {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #btn {
+            padding: 5px 10px;
+            margin: 10px 0;
+            background-color: red;
+            color: black;
+            border-radius: 20px;
+            filter: drop-shadow(0 0 5px black);
+        }
+
+        #btn:hover {
+            filter: drop-shadow(0 0 10px black);
+            cursor: pointer;
+        }
+
+        .mainlogo {
+            align-items: center;
+            filter: drop-shadow(0 0 40px grey);
+        }
+
+        body {
+            background-color: red;
+        }
+
+        #videos {
+            margin: 50px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        #videos iframe {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="first">
+        <img src="	https://www.freeiconspng.com/thumbs/youtube-logo-png/youtube-logo-png-transparent-image-5.png" alt=""
+            class="mainlogo">
+        <section class="input">
+            <input type="text" id="i" placeholder="Enter Something">
+            <button id="btn">Search</button>
+        </section>
+    </section>
+    <div id="videos"></div>
+    <script>
+        let v = document.querySelector("#videos")
+        let btn = document.querySelector("#btn")
+        let i = document.querySelector("#i")
+        btn.addEventListener('click', (e) => {
+            e.preventDefault()
+            let url = `http://localhost:3000/search?q=${i.value}`
+            let r = fetch(url)
+            r.then((response) => {
+                return response.json()
+            }).then((resp) => {
+                console.log(resp)
+                let htmlStr = ""
+                resp.data.items.forEach(element => {
+                    if (element.id.kind == "youtube#video") {
+                        htmlStr += `<iframe width="426" height="240" src="https://www.youtube.com/embed/${element.id.videoId}" title="${element.snippet.title}" allow="fullscreen"</iframe>`
+                    }
+                })
+                v.innerHTML = htmlStr
+            })
+        })
+    </script>
+</body>
+
+</html>
